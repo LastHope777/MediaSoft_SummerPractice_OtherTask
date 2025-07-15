@@ -1,7 +1,12 @@
 package com.example.demo.config;
 
-import com.example.demo.model.*;
-import com.example.demo.service.*;
+import com.example.demo.dto.RatingRequestDTO;
+import com.example.demo.dto.RestaurantRequestDTO;
+import com.example.demo.dto.VisitorRequestDTO;
+import com.example.demo.service.RatingService;
+import com.example.demo.service.RestaurantService;
+import com.example.demo.service.VisitorService;
+import com.example.demo.model.CuisineType;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,40 +23,38 @@ public class DataInitializer {
 
     @PostConstruct
     public void init() {
-        visitorService.save(new Visitor(1L, "Иван", 25, "М"));
-        visitorService.save(new Visitor(2L, null, 30, "Ж"));
+        // Добавление посетителей через DTO
+        visitorService.create(new VisitorRequestDTO("Иван", 25, "М"));
+        visitorService.create(new VisitorRequestDTO(null, 30, "Ж"));
 
-        restaurantService.save(new Restaurant(
-                1L,
+        // Добавление ресторанов через DTO
+        restaurantService.create(new RestaurantRequestDTO(
                 "Bella Italia",
                 "Итальянская кухня",
                 CuisineType.ITALIAN,
-                new BigDecimal("1500"),
-                BigDecimal.ZERO
+                new BigDecimal("1500")
         ));
 
-        restaurantService.save(new Restaurant(
-                2L,
+        restaurantService.create(new RestaurantRequestDTO(
                 "Asia Wok",
                 "",
                 CuisineType.CHINESE,
-                new BigDecimal("900"),
-                BigDecimal.ZERO
+                new BigDecimal("900")
         ));
 
-        ratingService.save(new Rating(1L, 1L, 5, "Отлично!"));
-        ratingService.save(new Rating(2L, 1L, 4, ""));
-        ratingService.save(new Rating(1L, 2L, 3, "Нормально"));
+        // Добавление отзывов через DTO
+        ratingService.create(new RatingRequestDTO(1L, 1L, 5, "Отлично!"));
+        ratingService.create(new RatingRequestDTO(2L, 1L, 4, ""));
+        ratingService.create(new RatingRequestDTO(1L, 2L, 3, "Нормально"));
 
-
+        // Проверка работы API
         System.out.println("\nВсе посетители:");
-        visitorService.findAll().forEach(System.out::println);
+        visitorService.getAll().forEach(System.out::println);
 
         System.out.println("\nВсе рестораны:");
-        restaurantService.findAll().forEach(System.out::println);
+        restaurantService.getAll().forEach(System.out::println);
 
         System.out.println("\nВсе оценки:");
-        ratingService.findAll().forEach(System.out::println);
+        ratingService.getAll().forEach(System.out::println);
     }
-
 }

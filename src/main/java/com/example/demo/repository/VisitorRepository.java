@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Repository
 public class VisitorRepository {
@@ -16,6 +17,10 @@ public class VisitorRepository {
 
     public void remove(Visitor visitor) {
         visitors.remove(visitor);
+    }
+
+    public void removeIf(Predicate<Visitor> predicate) {
+        visitors.removeIf(predicate);
     }
 
     public List<Visitor> findAll() {

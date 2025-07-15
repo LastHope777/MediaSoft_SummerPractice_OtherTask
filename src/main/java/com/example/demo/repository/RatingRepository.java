@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
@@ -18,6 +19,10 @@ public class RatingRepository {
 
     public void remove(Rating rating) {
         ratings.remove(rating);
+    }
+
+    public void removeIf(Predicate<Rating> predicate) {
+        ratings.removeIf(predicate);
     }
 
     public List<Rating> findAll() {
