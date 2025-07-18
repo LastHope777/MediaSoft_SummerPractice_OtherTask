@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,19 +16,11 @@ import java.util.stream.Collectors;
 public class RestaurantService {
 
     private final RestaurantRepository repository;
-    private final AtomicLong idGenerator = new AtomicLong(1);
 
     public RestaurantResponseDTO create(RestaurantRequestDTO dto) {
-        Restaurant restaurant = new Restaurant(
-                idGenerator.getAndIncrement(),
-                dto.getName(),
-                dto.getDescription(),
-                dto.getCuisineType(),
-                dto.getAverageBill(),
-                BigDecimal.ZERO
-        );
-        repository.save(restaurant);
-        return toDTO(restaurant);
+        Restaurant restaurant = new Restaurant(null, dto.getName(), dto.getDescription(), dto.getCuisineType(), dto.getAverageBill(), BigDecimal.ZERO);
+        Restaurant saved = repository.save(restaurant);
+        return toDTO(saved);
     }
 
     public List<RestaurantResponseDTO> getAll() {
@@ -39,21 +30,12 @@ public class RestaurantService {
     }
 
     public RestaurantResponseDTO update(Long id, RestaurantRequestDTO dto) {
-        repository.removeIf(r -> r.getId().equals(id));
-        Restaurant updated = new Restaurant(
-                id,
-                dto.getName(),
-                dto.getDescription(),
-                dto.getCuisineType(),
-                dto.getAverageBill(),
-                BigDecimal.ZERO
-        );
-        repository.save(updated);
-        return toDTO(updated);
+        Restaurant updated = new Restaurant(id, dto.getName(), dto.getDescription(), dto.getCuisineType(), dto.getAverageBill(), BigDecimal.ZERO);
+        return toDTO(repository.save(updated));
     }
 
     public void delete(Long id) {
-        repository.removeIf(r -> r.getId().equals(id));
+        repository.deleteById(id);
     }
 
     private RestaurantResponseDTO toDTO(Restaurant restaurant) {
