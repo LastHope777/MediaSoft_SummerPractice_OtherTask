@@ -30,9 +30,18 @@ public class RestaurantService {
     }
 
     public RestaurantResponseDTO update(Long id, RestaurantRequestDTO dto) {
-        Restaurant updated = new Restaurant(id, dto.getName(), dto.getDescription(), dto.getCuisineType(), dto.getAverageBill(), BigDecimal.ZERO);
-        return toDTO(repository.save(updated));
+        Restaurant restaurant = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        restaurant.setName(dto.getName());
+        restaurant.setDescription(dto.getDescription());
+        restaurant.setCuisineType(dto.getCuisineType());
+        restaurant.setAverageBill(dto.getAverageBill());
+
+        Restaurant saved = repository.save(restaurant);
+        return toDTO(saved);
     }
+
 
     public void delete(Long id) {
         repository.deleteById(id);
